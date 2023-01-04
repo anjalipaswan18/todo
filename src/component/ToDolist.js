@@ -1,30 +1,24 @@
 import React, { useState } from "react";
-import Modal from "./Modal";
+import Popup from "./Popup";
 import "./Todo.css";
+import { AiTwotoneDelete } from "react-icons/ai";
+import { AiTwotoneEdit } from "react-icons/ai";
+
 export default function Todo() {
-  const [show, setshow] = useState(true);
-  const [inputList, setInputList] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [show, setShow] = useState(false);
   const [view, setView] = useState("all");
+  const [edit, setEdit] = useState("");
+
   const [Items, setItems] = useState([
-    { name: "buy apple", isComplete: true },
-    { name: "buy apple" },
-    { name: "buy apple" },
+    { id: "1", name: "apple", isComplete: true },
+    { id: "2", name: "mango" },
+    { id: "3", name: "onion" },
   ]);
-  const itemEvent = (event) => {
-    setInputList(event.target.value);
-  };
-  const listOfitems = () => {
-    console.log(listOfitems);
-    if (inputList === "") {
-      setErrorMessage("Error: Please enter a valid item");
-    } else {
-      setErrorMessage("");
-      setItems((oldItems) => {
-        return [...oldItems, { name: inputList, isCompleted: false }];
-      });
-    }
-    setInputList("");
+
+  const listOfitems = (inputData) => {
+    setItems((oldItems) => {
+      return [...oldItems, { name: inputData, isCompleted: false }];
+    });
   };
   const Lists = (val) => {
     setItems(
@@ -50,41 +44,26 @@ export default function Todo() {
   const notShow = () => {
     setView("completed");
   };
+  const deleteItem = (id) => {
+    setItems(Items.filter((items, i) => i !== id));
+  };
+
   return (
     <>
       <div className="main-container">
         <div className="small-container">
           <h1>ToDo list</h1>
           <br />
-          {show ? <Modal /> : null}
-
-          <label>
-            <input
-              type="text"
-              placeholder="Add a Items"
-              value={inputList}
-              onChange={itemEvent}
-              required="reqiured"
-            />{" "}
-            {
-              <button
-                className="add-button"
-                onClick={() => {
-                  listOfitems();
-                  setshow(true);
-                }}
-              >
-                +
-              </button>
-            }
-          </label>
+          <button onClick={() => setShow(!show)}>+ add</button>
+          {show && (
+            <Popup setShow={() => setShow(!show)} listOfitems={listOfitems} />
+          )}
           <div className="input-button">
             {" "}
             {<button onClick={allshow}>all</button>}
             <button onClick={showList}>notcompleted</button>
             <button onClick={notShow}>Completed</button>
           </div>
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
           <ol>
             {Items.filter((item) => {
               if (view === "all") {
@@ -102,7 +81,15 @@ export default function Todo() {
                   }
                   key={index}
                 >
-                  {itemval?.name}{" "}
+                  {edit === index ? (
+                    <input
+                      type="text"
+                      value={itemval.name}
+                      onChange={(event) => setEdit(event.target.value)}
+                    />
+                  ) : (
+                    itemval.name
+                  )}
                   {itemval?.date && new Date(itemval?.date).toLocaleString()}
                   <input
                     onClick={() => Lists(index)}
@@ -110,6 +97,19 @@ export default function Todo() {
                     className="todo-style"
                     checked={itemval.isCompleted}
                   />
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteItem(index)}
+                  >
+                    <AiTwotoneDelete />
+                  </button>
+                  <button
+                    className="edit-button"
+                    onClick={() => setEdit(index)}
+                  >
+                    edit
+                    <AiTwotoneEdit />
+                  </button>
                 </li>
               );
             })}

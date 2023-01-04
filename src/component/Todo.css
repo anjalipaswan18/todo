@@ -99,3 +99,14 @@ ol {
   display: flex;
   justify-content: space-between;
 }
+.delete-button {
+  background-color: darkred;
+  color: white;
+  border: none;
+}
+.edit-button {
+  background-color: darkred;
+  color: white;
+  border: none;
+  margin-left: 5rem;
+}

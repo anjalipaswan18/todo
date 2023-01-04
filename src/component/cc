@@ -1,0 +1,67 @@
+const [edit, setEdit] = useState("");
+<li
+  className={
+    itemval.isCompleted ? "disbaleListItems" : "listItems"
+  }
+  key={index}
+>
+  {edit === index ? (
+    <input
+      type="text"
+      value={itemval.name}
+      onChange={(event) => {
+        // update the name of the todo item with the new value
+      }}
+    />
+  ) : (
+    itemval.name
+  )}
+  {itemval?.date && new Date(itemval?.date).toLocaleString()}
+  <input
+    onClick={() => Lists(index)}
+    type="checkbox"
+    className="todo-style"
+    checked={itemval.isCompleted}
+  />
+  <button className="delete-button" onClick={() => deleteItem(index)}>
+    <AiTwotoneDelete />
+  </button>
+  <button className="edit-button" onClick={() => setEdit(index)}>
+    edit
+    <AiTwotoneEdit />
+  </button>
+</li>
+
+
+
+
+onChange={(event) => {
+  setItems(
+    Items.map((value, i) => {
+      if (i === index) {
+        return {
+          ...value,
+          name: event.target.value,
+        };
+      } else {
+        return value;
+      }
+    })
+  );
+}}
+
+
+{edit === index ? (
+  <>
+    <input
+      type="text"
+      value={itemval.name}
+      onChange={(event) => {
+        // update the name of the todo item with the new value
+      }}
+    />
+    <button onClick={() => setEdit("")}>save</button>
+  </>
+) : (
+  itemval.name
+)}
